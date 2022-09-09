@@ -1,22 +1,32 @@
-#months = ('January' = 1, 'February' =2 , 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December')
-#days = ('')
+import csv
+import calendar
 
-def main():
+avgmonth = {}
 
-    import csv
-    infile = open('steps.csv', 'r').readlines()
-    csvfile = csv.reader(infile, delimiter = ',')
-    next (csvfile)
-    write = csv.write(outfile, delimiter = ',')
-    outfile = open('avg_steps.csv', 'w')
+with open('steps.csv') as file:
+    filereader = csv.reader(file, delimiter = ',')
+    count = 0
 
-    sum = 0 #sum of steps 
-    jan = 31
-    for line in infile:
-        if infile[0] == 1:
-            sum += float(line)
-    average = sum / jan
-    
-    writer.writerow(average)
+    for line in filereader: 
+        if count == 0:
+            count += 1
+            continue
+        else:
+            NameOfMonth = calendar.month_name[int(line[0])]
+            if int(line[0]) not in avgmonth.keys():
+                avgmonth[int(line[0])] = [int (line[1])]
+            else:
+                avgmonth[int(line[0])].append(int(line[1]))
 
-main()
+with open('avg_steps.csv', 'w') as avgsteps:
+    avgstepswriter = csv.writer(avgsteps, delimiter = ',')
+    avgstepswriter.writerow(['Month' '\tSteps'])
+    month = list(avgmonth.keys())
+    month.sort()
+
+    for x in month:
+        avgstepswriter.writerow([calendar.month_name[x], sum(avgmonth[x])/len(avgmonth[x])])
+        #i tried to round off the number but couldnt figure out how to 
+
+file.close()
+avgsteps.close()
